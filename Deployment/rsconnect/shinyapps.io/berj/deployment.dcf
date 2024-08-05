@@ -1,0 +1,10 @@
+name: deployment
+title:
+username: berj
+account: berj
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 12409483
+bundleId: 8947918
+url: https://berj.shinyapps.io/deployment/
+version: 1

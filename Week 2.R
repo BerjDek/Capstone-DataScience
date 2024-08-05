@@ -9,16 +9,18 @@ install.packages("wordcloud")
 install.packages("textdata")
 install.packages("reshape2")
 
+rm(list = ls())
+
 # Load necessary libraries
 library(tidyverse)
 library(shiny)
 library(knitr)
 library(stringr)
-library(tm)
 library(tidytext)
 library(wordcloud)
 library(textdata)
 library(reshape2)
+
 # Load the data
 blogs <- readLines("en_US.blogs.txt", warn = FALSE, encoding = "UTF-8")
 twitter <- readLines("en_US.twitter.txt", warn = FALSE, encoding = "UTF-8")
@@ -29,6 +31,7 @@ head(blogs)
 head(twitter)
 head(news)
 
+library(tibble)
 # Create summaries of each
 blogs_summary <- tibble(
   File = "Blogs",
@@ -54,9 +57,15 @@ news_summary <- tibble(
   Size_MB = file.size("en_US.news.txt") / (1024^2)
 )
 
+library(dplyr)
 # Combine all summaries into one table
 summary_stats <- bind_rows(blogs_summary, twitter_summary, news_summary)
+
+
+
+library(knitr)
 kable(summary_stats, caption = "Summary Statistics of Text Data")
+
 
 # Sample the data to create manageable datasets for plotting, choosing 1000 lines from each
 set.seed(123)

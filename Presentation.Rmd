@@ -1,0 +1,75 @@
+---
+title: "Next Word Prediction Model"
+author: "Berj Dekramanjian"
+output:
+  xaringan::moon_reader:
+    css: ["default", "default-fonts"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+
+
+# Introduction
+
+- This presentation explains how the next word prediction model works.
+- Summarizes the performance of the prediction algorithm.
+- Demonstrates the Shiny app we created.
+
+
+- **The Objective** of the project this slide showcases was to create an app using the algorithm, that can be public and used by anyone.
+
+- **The link to the App**  https://berj.shinyapps.io/deployment/
+
+---
+
+
+# Shiny Application
+
+ The application uses the text prediction algorithm to predict the next words, based on text entered by a user.
+ 
+ Under the hood a lot is going on. The basic principle is that the next word in the sentence will be suggested based on n-grams
+ The application looks for contiguous sequence of n words that match its own data base starting from a sequence of 4 words to 1 and prioritizing 
+ the likelihood of its accuracy accordingly.
+ 
+ The app also automatically converts the sentences chunks given to it to lowercase to properly match it with its own set and if the user wants to
+ it allows entering a set of Acceptable Words for the prediction to be limited to
+ 
+ Various methods were explored to improve speed and accuracy using natural language processing and text mining techniques.
+
+
+---
+
+# Predictive Model Creation
+- **Text Data Sources**: The course has given large samples from Blogs, Twitter, and News articles. Since the items were too big samples from were taken
+
+- **Sample Size VS Speed of Processing**: As bigger the sample size is the slower and more resource heavy its processing needs to be, compromises between size and accuracy were needed and it was decided to take 400K, 800K and 50K lines of each of the sample files was taken respectively
+
+- **However** that's only the start! In order to *Pre-Process* the sample so the algorithm can properly use it
+       - The sample was cleaned or symbols, profanities, numbers... and standardized to lowercase
+       - Tokenized and sets of bigrams,trigrams,fourgrams, and fivegrams created.
+       - A separate function was created to take sets and separate the n-grams highlighting the last word, counting the frequency of different first sets of n-grams and the last word.
+       - Highest frequencies were selected with top occurring 300k Bi and Tri Grams as well as top 100k Four and Five Grams
+       - The final 800k top occurring sets were combined to create a manageable data frame for the algorithm to efficiently find predictions
+              
+
+---
+
+# Interface
+
+- After clicking on the link you will be able to enter a word or a sentence fragment, and also set the number of predictions and a set of acceptable 
+words if you wish to limit your search
+
+- The results will list the predictions in a ranked list, show the number of occurrences in all set of grams (2,3,4,5) and finally show the depth
+of the sentence sequence match, as this shows the number of the final words in the sentence fragment you present it in its own data base, going form 
+1 to 4 with the higher number showing further accuracy in the prediction based on the sentence context.
+
+<img src="https://github.com/BerjDek/Capstone-DataScience/blob/main/applicationscreenshot.png?raw=true" width="100%" height="100%">

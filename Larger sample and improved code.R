@@ -83,8 +83,11 @@ preprocess_ngrams <- function(ngrams_df, n) {
 }
 
 
-#load items that are already saved
+#load items if already saved from before to skip the code below this that is very memory intensive
 df_top_bigrams <- readRDS("df_top_bigrams_300K.rds")
+df_top_trigrams <- readRDS("df_top_trigrams_300K.rds")
+df_top_fourgrams <- readRDS("df_top_fourgrams_100K.rds")
+df_top_fivegrams <- readRDS("df_top_fivegrams_100K.rds")
 
 
 # Extract top 100 most frequent bigrams
@@ -149,6 +152,8 @@ saveRDS(df_top_fivegrams, file = "df_top_fivegrams_100K.rds")
 rm(fivegrams, top_fivegrams, dfm_fivegrams)
 
 
+
+
 #create a function that adds Laplace smoothing
 
 
@@ -171,8 +176,6 @@ df_top_trigrams_s <- add_laplace_smoothing(df_top_trigrams)
 df_top_fourgrams_s  <- add_laplace_smoothing(df_top_fourgrams)
 df_top_fivegrams_s  <- add_laplace_smoothing(df_top_fivegrams)
 
-
-combined_ngramss <- bind_rows(df_top_bigrams, df_top_trigrams, df_top_fourgrams, df_top_fivegrams)
 
 #comining Ngram dataframes
 combined_ngrams <- bind_rows(df_top_bigrams_s, df_top_trigrams_s, df_top_fourgrams_s, df_top_fivegrams_s)
@@ -225,6 +228,9 @@ predict_next_words_ngram <- function(input_text, combined_ngrams, top_n = 8, acc
   # Ensure we have exactly top_n results
   results <- results %>% distinct(next_word, .keep_all = TRUE) %>% arrange(desc(num_words), desc(frequency)) %>% head(top_n)
   
+  # Rename columns for the final output
+  colnames(results) <- c("Predicted next word by rank", "Prior Occurrences", "Prior word sequence match depth")
+  
   return(results)
 }
 
@@ -244,7 +250,7 @@ acceptable_words <- c("case","matter", "account", "incident")
 
 
 #example
-predict_next_words_ngram("a jury to settle the", combined_ngrams, top_n = 20, acceptable_words = acceptable_words)
+predict_next_words_ngram("a jury to settle the", combined_ngrams, top_n = 20)
 
 
 
